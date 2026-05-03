@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,9 +21,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class GameActivity extends AppCompatActivity {
 
+    Double balance;
     TextView textViewUsername, gameName, slot1, slot2, slot3;
     Button btnBalance, btnSpin;
     ImageView imageViewGame;
+
+    AlertDialog balanceDialog;
 
     final String[] symbols = {"🍒", "🍋", "⭐", "🔔", "🍇"};
 
@@ -50,10 +56,11 @@ public class GameActivity extends AppCompatActivity {
 
         btnBalance = (Button) findViewById(R.id.btnBalanceGame);
         btnBalance.setText(String.format("$%.2f", i.getDoubleExtra("balance", 0.0)));
+        balance = i.getDoubleExtra("balance", 0.0);
 
         imageViewGame = (ImageView) findViewById(R.id.imageViewGame);
         imageViewGame.setImageBitmap(ImageVault.getImageBm());
-        
+
         gameName = (TextView) findViewById(R.id.textViewGameName);
         gameName.setText(i.getStringExtra("gameName"));
 
@@ -103,6 +110,35 @@ public class GameActivity extends AppCompatActivity {
                 };
 
                 handler.post(ticker);
+            }
+        });
+
+        btnBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+                builder.setTitle("Add balance");
+
+                EditText input = new EditText(GameActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                input.setHint("Enter amount");
+                builder.setView(input);
+
+
+                builder.setPositiveButton("Apply Filter", (dialog, which) -> {
+                    String balanceStr = input.getText().toString();
+                    if (!balanceStr.isBlank()) {
+                        balance += Double.parseDouble(balanceStr);
+                        btnBalance.setText(String.format("$%.2f", balance));
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                if (!isFinishing()) {
+                    balanceDialog = builder.create();
+                    balanceDialog.show();
+                }
             }
         });
     }
