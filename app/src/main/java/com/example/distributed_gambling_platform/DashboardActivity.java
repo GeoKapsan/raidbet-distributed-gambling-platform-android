@@ -61,7 +61,9 @@ public class DashboardActivity extends AppCompatActivity {
             return (Request) ois.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
-            //Toast.makeText(DashboardActivity.this, "[FAIL] Could not communicate with Master: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            runOnUiThread(()->
+                    Toast.makeText(DashboardActivity.this, "[FAIL] Could not communicate with Master", Toast.LENGTH_SHORT).show()
+            );
             return null;
         }
     }

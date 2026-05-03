@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -19,9 +20,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import shared.Request;
+
 public class GameActivity extends AppCompatActivity {
 
-    Double balance;
+    double balance;
+    double amountWon;
     TextView textViewUsername, gameName, slot1, slot2, slot3;
     Button btnBalance, btnSpin;
     ImageView imageViewGame;
@@ -31,6 +40,25 @@ public class GameActivity extends AppCompatActivity {
     final String[] symbols = {"🍒", "🍋", "⭐", "🔔", "🍇"};
 
     final Handler handler = new Handler(Looper.getMainLooper());
+
+    private Request sendToMaster(Request request) {
+        try (
+                Socket client = new Socket("10.0.2.2", 5001);
+                ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+        ) {
+            oos.flush();
+            oos.writeObject(request);
+            oos.flush();
+            return (Request) ois.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            runOnUiThread(()->
+                    Toast.makeText(GameActivity.this, "[FAIL] Could not communicate with Master", Toast.LENGTH_SHORT).show()
+            );
+            return null;
+        }
+    }
 
     String getRandomSymbol() {
         return symbols[(int) (Math.random() * symbols.length)];
@@ -47,7 +75,7 @@ public class GameActivity extends AppCompatActivity {
             return insets;
         });
 
-        //create appearance from previous screen
+        //Create appearance from previous screen
 
         Intent i = getIntent();
 
@@ -75,41 +103,72 @@ public class GameActivity extends AppCompatActivity {
                 btnSpin.setEnabled(false);
                 btnSpin.setText("SPINNING...");
 
-                final long totalDuration = 2000L;
-                final long tickInterval = 80L;
-                final long[] elapsed = {0L};
+                //Create Request & send to Master
+                Request request = new Request(Request.Type.PLAY);
+                request.put("gameName", gameName.getText().toString());
 
-                Runnable ticker = new Runnable() {
-                    @Override
-                    public void run() {
+                //TODO User must add betting amount
+                request.put("bettingAmount", balance);
 
-                        slot1.setText(getRandomSymbol());
-                        slot2.setText(getRandomSymbol());
-                        slot3.setText(getRandomSymbol());
+                request.put("playerId", textViewUsername.getText().toString());
 
-                        elapsed[0] += tickInterval;
+                new Thread(() -> {
+                    //Receive response from Master
+                    Request response = sendToMaster(request);
 
-                        if (elapsed[0] < totalDuration) {
-                            handler.postDelayed(this, tickInterval);
-                        } else {
-                            String finalSymbol1 = getRandomSymbol();
-                            String finalSymbol2 = getRandomSymbol();
-                            String finalSymbol3 = getRandomSymbol();
+                    String status = (String) response.get("status");
 
-                            slot1.setText(finalSymbol1);
-                            handler.postDelayed(() -> {
-                                slot2.setText(finalSymbol2);
-                                handler.postDelayed(() -> {
-                                    slot3.setText(finalSymbol3);
-                                    btnSpin.setEnabled(true);
-                                    btnSpin.setText("SPIN");
-                                }, 200);
-                            }, 200);
-                        }
+                    if (!"OK".equals(status)) {
+                        runOnUiThread(()->
+                                Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show()
+                        );
+                        btnSpin.setEnabled(true);
+                        btnSpin.setText("SPIN");
+                        return;
                     }
-                };
 
-                handler.post(ticker);
+                    amountWon = (Double) response.get("amountWon");
+
+                    //TODO Implement correct balance updater
+                    balance += amountWon - balance;
+                    btnBalance.setText(String.format("$%.2f", balance));
+
+                    final long totalDuration = 2000L;
+                    final long tickInterval = 80L;
+                    final long[] elapsed = {0L};
+
+                    Runnable ticker = new Runnable() {
+                        @Override
+                        public void run() {
+
+                            slot1.setText(getRandomSymbol());
+                            slot2.setText(getRandomSymbol());
+                            slot3.setText(getRandomSymbol());
+
+                            elapsed[0] += tickInterval;
+
+                            if (elapsed[0] < totalDuration) {
+                                handler.postDelayed(this, tickInterval);
+                            } else {
+                                String finalSymbol1 = getRandomSymbol();
+                                String finalSymbol2 = getRandomSymbol();
+                                String finalSymbol3 = getRandomSymbol();
+
+                                slot1.setText(finalSymbol1);
+                                handler.postDelayed(() -> {
+                                    slot2.setText(finalSymbol2);
+                                    handler.postDelayed(() -> {
+                                        slot3.setText(finalSymbol3);
+                                        btnSpin.setEnabled(true);
+                                        btnSpin.setText("SPIN");
+                                    }, 200);
+                                }, 200);
+                            }
+                        }
+                    };
+
+                    handler.post(ticker);
+                }).start();
             }
         });
 
