@@ -77,7 +77,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,8 +180,10 @@ public class DashboardActivity extends AppCompatActivity {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     Intent i = new Intent(getApplicationContext(), GameActivity.class);
 
-                                    i.putExtra("username", listItems.get(position).text);
-                                    i.putExtra("image", listItems.get(position).image);
+                                    i.putExtra("username", textViewUsername.getText().toString());
+                                    ImageVault.setImageBm(listItems.get(position).image);
+                                    i.putExtra("gameName", listItems.get(position).text);
+                                    i.putExtra("balance", balance);
                                     startActivity(i);
                                 }
                             });
