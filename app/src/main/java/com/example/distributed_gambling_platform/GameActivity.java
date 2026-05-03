@@ -29,13 +29,13 @@ import shared.Request;
 
 public class GameActivity extends AppCompatActivity {
 
-    double balance;
+    double balance, bettingAmount;
     double amountWon;
     TextView textViewUsername, gameName, slot1, slot2, slot3;
-    Button btnBalance, btnSpin;
+    Button btnBalance, btnSpin, btnBet;
     ImageView imageViewGame;
 
-    AlertDialog balanceDialog;
+    AlertDialog balanceDialog, betDialog;
 
     final String[] symbols = {"🍒", "🍋", "⭐", "🔔", "🍇"};
 
@@ -83,6 +83,7 @@ public class GameActivity extends AppCompatActivity {
         textViewUsername.setText(i.getStringExtra("username"));
 
         btnBalance = (Button) findViewById(R.id.btnBalanceGame);
+        btnBet = (Button) findViewById(R.id.btnBet);
         btnBalance.setText(String.format("$%.2f", i.getDoubleExtra("balance", 0.0)));
         balance = i.getDoubleExtra("balance", 0.0);
 
@@ -97,6 +98,40 @@ public class GameActivity extends AppCompatActivity {
         slot3 = (TextView) findViewById(R.id.slot3);
         btnSpin = (Button) findViewById(R.id.btnSpin);
 
+        btnBet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+                builder.setTitle("Add betting amount");
+
+                EditText input = new EditText(GameActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                input.setHint("Enter amount");
+                builder.setView(input);
+
+
+                builder.setPositiveButton("Confirm", (dialog, which) -> {
+                    String bettingAmountStr = input.getText().toString();
+                    if (!bettingAmountStr.isBlank()) {
+                        bettingAmount = Double.parseDouble(bettingAmountStr);
+                        if (bettingAmount <= balance) {
+                            btnBet.setText(String.format("$%.2f", bettingAmount));
+                        } else {
+                            bettingAmount = 0.0;
+                            Toast.makeText(GameActivity.this, "Not enough balance to bet", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                if (!isFinishing()) {
+                    betDialog = builder.create();
+                    betDialog.show();
+                }
+            }
+        });
+
         btnSpin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,8 +142,7 @@ public class GameActivity extends AppCompatActivity {
                 Request request = new Request(Request.Type.PLAY);
                 request.put("gameName", gameName.getText().toString());
 
-                //TODO User must add betting amount
-                request.put("bettingAmount", balance);
+                request.put("bettingAmount", bettingAmount);
 
                 request.put("playerId", textViewUsername.getText().toString());
 
@@ -119,19 +153,20 @@ public class GameActivity extends AppCompatActivity {
                     String status = (String) response.get("status");
 
                     if (!"OK".equals(status)) {
-                        runOnUiThread(()->
-                                Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show()
+                        runOnUiThread(()-> {
+                                Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show();
+                                btnSpin.setEnabled(true);
+                                btnSpin.setText("SPIN");
+                            }
                         );
-                        btnSpin.setEnabled(true);
-                        btnSpin.setText("SPIN");
                         return;
                     }
 
                     amountWon = (Double) response.get("amountWon");
 
-                    //TODO Implement correct balance updater
-                    balance += amountWon - balance;
+                    balance += amountWon - bettingAmount;
                     btnBalance.setText(String.format("$%.2f", balance));
+                    btnBet.setText("0.0");
 
                     final long totalDuration = 2000L;
                     final long tickInterval = 80L;
@@ -184,7 +219,7 @@ public class GameActivity extends AppCompatActivity {
                 builder.setView(input);
 
 
-                builder.setPositiveButton("Apply Filter", (dialog, which) -> {
+                builder.setPositiveButton("Confirm", (dialog, which) -> {
                     String balanceStr = input.getText().toString();
                     if (!balanceStr.isBlank()) {
                         balance += Double.parseDouble(balanceStr);

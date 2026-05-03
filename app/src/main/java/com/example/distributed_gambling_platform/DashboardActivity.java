@@ -214,7 +214,7 @@ public class DashboardActivity extends AppCompatActivity {
                 builder.setView(input);
 
 
-                builder.setPositiveButton("Apply Filter", (dialog, which) -> {
+                builder.setPositiveButton("Confirm", (dialog, which) -> {
                     String balanceStr = input.getText().toString();
                     if (!balanceStr.isBlank()) {
                         balance += Double.parseDouble(balanceStr);
