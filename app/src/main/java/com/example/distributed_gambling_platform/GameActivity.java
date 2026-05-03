@@ -165,7 +165,6 @@ public class GameActivity extends AppCompatActivity {
                     amountWon = (Double) response.get("amountWon");
 
                     balance += amountWon - bettingAmount;
-                    btnBalance.setText(String.format("$%.2f", balance));
                     btnBet.setText("0.0");
 
                     final long totalDuration = 2000L;
@@ -198,6 +197,8 @@ public class GameActivity extends AppCompatActivity {
                                         btnSpin.setText("SPIN");
                                     }, 200);
                                 }, 200);
+
+                                btnBalance.setText(String.format("$%.2f", balance));
                             }
                         }
                     };
