@@ -51,7 +51,6 @@ public class GameActivity extends AppCompatActivity {
             oos.writeObject(request);
             oos.flush();
             return (Request) ois.readObject();
-
         } catch (IOException | ClassNotFoundException e) {
             runOnUiThread(()->
                     Toast.makeText(GameActivity.this, "[FAIL] Could not communicate with Master", Toast.LENGTH_SHORT).show()
@@ -109,7 +108,6 @@ public class GameActivity extends AppCompatActivity {
                 input.setHint("Enter amount");
                 builder.setView(input);
 
-
                 builder.setPositiveButton("Confirm", (dialog, which) -> {
                     String bettingAmountStr = input.getText().toString();
                     if (!bettingAmountStr.isBlank()) {
@@ -136,7 +134,6 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnSpin.setEnabled(false);
-                btnSpin.setText("SPINNING...");
 
                 //Create Request & send to Master
                 Request request = new Request(Request.Type.PLAY);
@@ -162,9 +159,13 @@ public class GameActivity extends AppCompatActivity {
                         return;
                     }
 
+                    btnSpin.setText("SPINNING...");
+
                     amountWon = (Double) response.get("amountWon");
 
                     balance += amountWon - bettingAmount;
+
+                    bettingAmount = 0.0;
                     btnBet.setText("0.0");
 
                     final long totalDuration = 2000L;
@@ -213,8 +214,29 @@ public class GameActivity extends AppCompatActivity {
                     TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);
                     TextView textViewResultBody = (TextView) customView.findViewById(R.id.textViewResultBody);
 
-                    //TODO continue building results screen
+                    if (amountWon == 0) {
+                        textViewResultTitle.setText("You lose...");
+                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#F44336"));
+                    } else {
+                        textViewResultTitle.setText("You Win!");
+                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
+                    }
 
+                    textViewResultBody.setText("Amount: " + String.format("$%.2f", amountWon));
+
+                    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    runOnUiThread(() -> {
+                        resultDialog = builder.create();
+
+                        if (resultDialog.getWindow() != null) {
+                            //resultDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                            int dialogWidth = (int) (screenWidth * 0.25);
+                            resultDialog.getWindow().setLayout(dialogWidth, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+                        }
+
+                        resultDialog.show();
+                    });
                 }).start();
             }
         });
