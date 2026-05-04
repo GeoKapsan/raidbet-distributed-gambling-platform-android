@@ -51,7 +51,6 @@ public class GameActivity extends AppCompatActivity {
             oos.writeObject(request);
             oos.flush();
             return (Request) ois.readObject();
-
         } catch (IOException | ClassNotFoundException e) {
             runOnUiThread(()->
                     Toast.makeText(GameActivity.this, "[FAIL] Could not communicate with Master", Toast.LENGTH_SHORT).show()
