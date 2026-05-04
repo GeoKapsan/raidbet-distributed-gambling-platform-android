@@ -35,7 +35,7 @@ public class GameActivity extends AppCompatActivity {
     Button btnBalance, btnSpin, btnBet;
     ImageView imageViewGame;
 
-    AlertDialog balanceDialog, betDialog;
+    AlertDialog balanceDialog, betDialog, resultDialog;
 
     final String[] symbols = {"🍒", "🍋", "⭐", "🔔", "🍇"};
 
@@ -75,7 +75,7 @@ public class GameActivity extends AppCompatActivity {
             return insets;
         });
 
-        //Create appearance from previous screen
+        // Create appearance from previous screen
 
         Intent i = getIntent();
 
@@ -204,6 +204,17 @@ public class GameActivity extends AppCompatActivity {
                     };
 
                     handler.post(ticker);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+
+                    View customView = getLayoutInflater().inflate(R.layout.dialog_play_result, null);
+                    builder.setView(customView);
+
+                    TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);
+                    TextView textViewResultBody = (TextView) customView.findViewById(R.id.textViewResultBody);
+
+                    //TODO continue building results screen
+
                 }).start();
             }
         });
