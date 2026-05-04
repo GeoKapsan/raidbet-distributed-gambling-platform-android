@@ -12,15 +12,16 @@
         android:layout_width="122dp"
         android:layout_height="41dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#723682F4"
+        android:backgroundTint="#502482F8"
         android:text="Balance"
-        android:textColor="@color/blue"
+        android:textColor="#1976FD"
         android:textStyle="bold"
         app:icon="@android:drawable/ic_input_add"
         app:iconPadding="0dp"
-        app:iconTint="@color/blue"
+        app:iconTint="#3683FC"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="#297DFC" />
 
     <TextView
         android:id="@+id/textUsernameGame"
