@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <RatingBar
-        android:id="@+id/ratingBarStarsRate"
+        android:id="@+id/ratingBarStarsGameRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
