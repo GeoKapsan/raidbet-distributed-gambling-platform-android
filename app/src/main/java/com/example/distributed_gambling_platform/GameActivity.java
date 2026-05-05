@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -208,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
 
-                    View customView = getLayoutInflater().inflate(R.layout.dialog_play_result, null);
+                    View customView = LayoutInflater.from(GameActivity.this).inflate(R.layout.dialog_play_result, null);
                     builder.setView(customView);
 
                     TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);

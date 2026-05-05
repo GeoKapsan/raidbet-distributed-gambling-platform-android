@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,7 +48,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     Button btnSearch, btnBalance;
 
-    AlertDialog filterDialog, balanceDialog;
+    AlertDialog filterDialog, balanceDialog, rateDialog;
 
     private Request sendToMaster(Request request) {
         try (
@@ -73,9 +74,17 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // This intercepts the Activity's death and safely closes the dialog first!
+        // Intercepts the Activity's death and safely closes the dialogs first
         if (filterDialog != null && filterDialog.isShowing()) {
             filterDialog.dismiss();
+        }
+
+        if (balanceDialog != null && balanceDialog.isShowing()) {
+            balanceDialog.dismiss();
+        }
+
+        if (rateDialog != null && rateDialog.isShowing()) {
+            rateDialog.dismiss();
         }
     }
 
@@ -175,20 +184,60 @@ public class DashboardActivity extends AppCompatActivity {
                         }
 
                         runOnUiThread(()-> {
-                            listView.setAdapter(new ListAdapter(listItems, DashboardActivity.this));
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            ListAdapter adapter = new ListAdapter(listItems, DashboardActivity.this, new ListAdapter.ListItemActionListener() {
                                 @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                public void onPlayClick(ListItem item) {
                                     Intent i = new Intent(getApplicationContext(), GameActivity.class);
 
                                     i.putExtra("username", textViewUsername.getText().toString());
-                                    ImageVault.setImageBm(listItems.get(position).image);
-                                    i.putExtra("gameName", listItems.get(position).text);
+                                    ImageVault.setImageBm(item.image);
+                                    i.putExtra("gameName", item.text);
                                     i.putExtra("balance", balance);
                                     startActivity(i);
                                 }
+
+                                @Override
+                                public void onRateClick(ListItem item) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                                    builder.setTitle("Rate game");
+
+                                    View customView = LayoutInflater.from(DashboardActivity.this).inflate(R.layout.dialog_rate_game, null);
+                                    builder.setView(customView);
+
+                                    RatingBar ratingBarStarsGameRate = customView.findViewById(R.id.ratingBarStarsGameRate);
+
+                                    builder.setPositiveButton("Confirm", (dialog, which) -> {
+                                        int stars = (int) ratingBarStarsGameRate.getRating();
+
+                                        // Create request
+                                        Request request = new Request(Request.Type.RATE_GAME);
+                                        request.put("stars", stars);
+                                        request.put("gameName", item.text);
+                                        request.put("playerId", textViewUsername.getText().toString());
+
+
+                                        new Thread(() -> {
+                                            // Receive response
+                                            Request response = sendToMaster(request);
+
+                                            runOnUiThread(() -> {
+                                                if (!"OK".equals(response.get("status"))) {
+                                                    Toast.makeText(DashboardActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(DashboardActivity.this, item.text + " rated successfully.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }).start();
+                                    });
+
+                                    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                                    rateDialog = builder.create();
+                                    rateDialog.show();
+                                }
                             });
+
+                            listView.setAdapter(adapter);
                         });
                     }).start();
                 });
