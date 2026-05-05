@@ -140,7 +140,7 @@ public class DashboardActivity extends AppCompatActivity {
                         Request response = sendToMaster(request);
 
                         // HashMap<String, String> games = (HashMap<String, String>) response.get("games");
-                        ArrayList<String> games = (ArrayList<String>) response.get("gameNames");
+                        ArrayList<String> games = (ArrayList<String>) response.get("result");
 
                         if (games == null || games.isEmpty()) {
                             runOnUiThread(()->
