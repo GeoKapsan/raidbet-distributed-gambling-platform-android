@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -69,6 +71,18 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    private final ActivityResultLauncher<Intent> gameLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                    double updatedBalance = result.getData().getDoubleExtra("NEW_BALANCE", 0.0);
+
+                    balance = updatedBalance;
+                    btnBalance.setText("$" + updatedBalance);
+                }
+            }
+    );
 
     @Override
     protected void onDestroy() {
@@ -187,13 +201,16 @@ public class DashboardActivity extends AppCompatActivity {
                             ListAdapter adapter = new ListAdapter(listItems, DashboardActivity.this, new ListAdapter.ListItemActionListener() {
                                 @Override
                                 public void onPlayClick(ListItem item) {
+                                    // Save image to shared object
+                                    ImageVault.setImageBm(item.image);
+
                                     Intent i = new Intent(getApplicationContext(), GameActivity.class);
 
-                                    i.putExtra("username", textViewUsername.getText().toString());
-                                    ImageVault.setImageBm(item.image);
-                                    i.putExtra("gameName", item.text);
-                                    i.putExtra("balance", balance);
-                                    startActivity(i);
+                                    i.putExtra("USERNAME", textViewUsername.getText().toString());
+                                    i.putExtra("SELECTED_GAME", item.text);
+                                    i.putExtra("BALANCE", balance);
+
+                                    gameLauncher.launch(i);
                                 }
 
                                 @Override

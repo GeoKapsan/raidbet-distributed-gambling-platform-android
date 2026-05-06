@@ -65,6 +65,17 @@ public class GameActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        Intent returnToDashboardIntent = new Intent();
+
+        returnToDashboardIntent.putExtra("NEW_BALANCE", balance);
+
+        setResult(RESULT_OK, returnToDashboardIntent);
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -80,18 +91,20 @@ public class GameActivity extends AppCompatActivity {
         Intent i = getIntent();
 
         textViewUsername = (TextView) findViewById(R.id.textUsernameGame);
-        textViewUsername.setText(i.getStringExtra("username"));
+        textViewUsername.setText(i.getStringExtra("USERNAME"));
 
         btnBalance = (Button) findViewById(R.id.btnBalanceGame);
         btnBet = (Button) findViewById(R.id.btnBet);
-        btnBalance.setText(String.format("$%.2f", i.getDoubleExtra("balance", 0.0)));
-        balance = i.getDoubleExtra("balance", 0.0);
+
+        // Update balance
+        balance = i.getDoubleExtra("BALANCE", 0.0);
+        btnBalance.setText(String.format("$%.2f", balance));
 
         imageViewGame = (ImageView) findViewById(R.id.imageViewGame);
         imageViewGame.setImageBitmap(ImageVault.getImageBm());
 
         gameName = (TextView) findViewById(R.id.textViewGameName);
-        gameName.setText(i.getStringExtra("gameName"));
+        gameName.setText(i.getStringExtra("SELECTED_GAME"));
 
         slot1 = (TextView) findViewById(R.id.slot1);
         slot2 = (TextView) findViewById(R.id.slot2);
