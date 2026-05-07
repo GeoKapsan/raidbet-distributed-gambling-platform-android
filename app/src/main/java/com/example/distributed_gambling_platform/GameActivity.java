@@ -64,6 +64,123 @@ public class GameActivity extends AppCompatActivity {
         return symbols[(int) (Math.random() * symbols.length)];
     }
 
+    private void updateBalance(double newBalance) {
+        balance = newBalance;
+        btnBalance.setText(String.format("$%.2f", balance));
+    }
+
+    private void setActivityElements(Intent i) {
+        textViewUsername = (TextView) findViewById(R.id.textUsernameGame);
+        textViewUsername.setText(i.getStringExtra("USERNAME"));
+
+        btnBalance = (Button) findViewById(R.id.btnBalanceGame);
+        btnBet = (Button) findViewById(R.id.btnBet);
+
+        // Update balance
+        updateBalance(i.getDoubleExtra("BALANCE", 0.0));
+
+        imageViewGame = (ImageView) findViewById(R.id.imageViewGame);
+        imageViewGame.setImageBitmap(ImageVault.getImageBm());
+
+        gameName = (TextView) findViewById(R.id.textViewGameName);
+        gameName.setText(i.getStringExtra("SELECTED_GAME"));
+
+        slot1 = (TextView) findViewById(R.id.slot1);
+        slot2 = (TextView) findViewById(R.id.slot2);
+        slot3 = (TextView) findViewById(R.id.slot3);
+        btnSpin = (Button) findViewById(R.id.btnSpin);
+    }
+
+    private void showBetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setTitle("Add betting amount");
+
+        EditText input = new EditText(GameActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Enter amount");
+        builder.setView(input);
+
+        builder.setPositiveButton("Confirm", (dialog, which) -> {
+            String bettingAmountStr = input.getText().toString();
+            if (!bettingAmountStr.isBlank()) {
+                bettingAmount = Double.parseDouble(bettingAmountStr);
+                if (bettingAmount <= balance) {
+                    btnBet.setText(String.format("$%.2f", bettingAmount));
+                } else {
+                    bettingAmount = 0.0;
+                    Toast.makeText(GameActivity.this, "Not enough balance to bet", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        if (!isFinishing()) {
+            betDialog = builder.create();
+            betDialog.show();
+        }
+    }
+
+    private void showPlayResult() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+
+        View customView = LayoutInflater.from(GameActivity.this).inflate(R.layout.dialog_play_result, null);
+        builder.setView(customView);
+
+        TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);
+        TextView textViewResultBody = (TextView) customView.findViewById(R.id.textViewResultBody);
+
+        if (amountWon == 0) {
+            textViewResultTitle.setText("You lose...");
+            textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#F44336"));
+        } else {
+            textViewResultTitle.setText("You Win!");
+            textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
+        }
+
+        textViewResultBody.setText("Amount: " + String.format("$%.2f", amountWon));
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        runOnUiThread(() -> {
+            resultDialog = builder.create();
+
+            if (resultDialog.getWindow() != null) {
+                //resultDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                int dialogWidth = (int) (screenWidth * 0.25);
+                resultDialog.getWindow().setLayout(dialogWidth, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+
+            resultDialog.show();
+        });
+    }
+
+    private void showBalanceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setTitle("Add balance");
+
+        EditText input = new EditText(GameActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Enter amount");
+        builder.setView(input);
+
+
+        builder.setPositiveButton("Confirm", (dialog, which) -> {
+            String balanceStr = input.getText().toString();
+            if (!balanceStr.isBlank()) {
+                balance += Double.parseDouble(balanceStr);
+                btnBalance.setText(String.format("$%.2f", balance));
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        if (!isFinishing()) {
+            balanceDialog = builder.create();
+            balanceDialog.show();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         Intent returnToDashboardIntent = new Intent();
@@ -87,60 +204,12 @@ public class GameActivity extends AppCompatActivity {
         });
 
         // Create appearance from previous screen
-
-        Intent i = getIntent();
-
-        textViewUsername = (TextView) findViewById(R.id.textUsernameGame);
-        textViewUsername.setText(i.getStringExtra("USERNAME"));
-
-        btnBalance = (Button) findViewById(R.id.btnBalanceGame);
-        btnBet = (Button) findViewById(R.id.btnBet);
-
-        // Update balance
-        balance = i.getDoubleExtra("BALANCE", 0.0);
-        btnBalance.setText(String.format("$%.2f", balance));
-
-        imageViewGame = (ImageView) findViewById(R.id.imageViewGame);
-        imageViewGame.setImageBitmap(ImageVault.getImageBm());
-
-        gameName = (TextView) findViewById(R.id.textViewGameName);
-        gameName.setText(i.getStringExtra("SELECTED_GAME"));
-
-        slot1 = (TextView) findViewById(R.id.slot1);
-        slot2 = (TextView) findViewById(R.id.slot2);
-        slot3 = (TextView) findViewById(R.id.slot3);
-        btnSpin = (Button) findViewById(R.id.btnSpin);
+        setActivityElements(getIntent());
 
         btnBet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                builder.setTitle("Add betting amount");
-
-                EditText input = new EditText(GameActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setHint("Enter amount");
-                builder.setView(input);
-
-                builder.setPositiveButton("Confirm", (dialog, which) -> {
-                    String bettingAmountStr = input.getText().toString();
-                    if (!bettingAmountStr.isBlank()) {
-                        bettingAmount = Double.parseDouble(bettingAmountStr);
-                        if (bettingAmount <= balance) {
-                            btnBet.setText(String.format("$%.2f", bettingAmount));
-                        } else {
-                            bettingAmount = 0.0;
-                            Toast.makeText(GameActivity.this, "Not enough balance to bet", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                if (!isFinishing()) {
-                    betDialog = builder.create();
-                    betDialog.show();
-                }
+                showBetDialog();
             }
         });
 
@@ -152,9 +221,7 @@ public class GameActivity extends AppCompatActivity {
                 //Create Request & send to Master
                 Request request = new Request(Request.Type.PLAY);
                 request.put("gameName", gameName.getText().toString());
-
                 request.put("bettingAmount", bettingAmount);
-
                 request.put("playerId", textViewUsername.getText().toString());
 
                 new Thread(() -> {
@@ -176,11 +243,6 @@ public class GameActivity extends AppCompatActivity {
                     btnSpin.setText("SPINNING...");
 
                     amountWon = (Double) response.get("amountWon");
-
-                    balance += amountWon - bettingAmount;
-
-                    bettingAmount = 0.0;
-                    btnBet.setText("0.0");
 
                     final long totalDuration = 2000L;
                     final long tickInterval = 80L;
@@ -213,44 +275,18 @@ public class GameActivity extends AppCompatActivity {
                                     }, 200);
                                 }, 200);
 
-                                btnBalance.setText(String.format("$%.2f", balance));
+                                showPlayResult();
+
+                                updateBalance(balance + amountWon - bettingAmount);
+
+                                // Clear bet
+                                bettingAmount = 0.0;
+                                btnBet.setText("0.0");
                             }
                         }
                     };
 
                     handler.post(ticker);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-
-                    View customView = LayoutInflater.from(GameActivity.this).inflate(R.layout.dialog_play_result, null);
-                    builder.setView(customView);
-
-                    TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);
-                    TextView textViewResultBody = (TextView) customView.findViewById(R.id.textViewResultBody);
-
-                    if (amountWon == 0) {
-                        textViewResultTitle.setText("You lose...");
-                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#F44336"));
-                    } else {
-                        textViewResultTitle.setText("You Win!");
-                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
-                    }
-
-                    textViewResultBody.setText("Amount: " + String.format("$%.2f", amountWon));
-
-                    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-                    runOnUiThread(() -> {
-                        resultDialog = builder.create();
-
-                        if (resultDialog.getWindow() != null) {
-                            //resultDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                            int dialogWidth = (int) (screenWidth * 0.25);
-                            resultDialog.getWindow().setLayout(dialogWidth, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-                        }
-
-                        resultDialog.show();
-                    });
                 }).start();
             }
         });
@@ -258,29 +294,7 @@ public class GameActivity extends AppCompatActivity {
         btnBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                builder.setTitle("Add balance");
-
-                EditText input = new EditText(GameActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setHint("Enter amount");
-                builder.setView(input);
-
-
-                builder.setPositiveButton("Confirm", (dialog, which) -> {
-                    String balanceStr = input.getText().toString();
-                    if (!balanceStr.isBlank()) {
-                        balance += Double.parseDouble(balanceStr);
-                        btnBalance.setText(String.format("$%.2f", balance));
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                if (!isFinishing()) {
-                    balanceDialog = builder.create();
-                    balanceDialog.show();
-                }
+                showBalanceDialog();
             }
         });
     }
