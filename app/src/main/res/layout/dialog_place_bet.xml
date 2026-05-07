@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_place_bet.xml -->
+<!-- Usage: minBet and maxBet are set programmatically via Slider.valueFrom / valueTo -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="28dp">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLACE YOUR BET"
+            android:fontFamily="@font/space_grotesk_bold"
+            android:letterSpacing="0.15"
+            android:textSize="11sp"
+            android:textColor="@color/accent_yellow"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How much will you wager?"
+            android:fontFamily="@font/space_grotesk_medium"
+            android:textSize="22sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="4dp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/accent_red" />
+
+        <!-- Bet Amount Display -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_bet_amount_chip"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Your Bet"
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tvBetAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$25"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="28sp"
+                android:textColor="@color/accent_green" />
+
+        </LinearLayout>
+
+        <!-- Slider -->
+        <!-- valueFrom / valueTo are set in code: slider.valueFrom = minBet; slider.valueTo = maxBet -->
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sliderBet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:valueFrom="0"
+            android:valueTo="100"
+            android:value="25"
+            android:stepSize="1"
+            app:haloColor="@color/accent_red_20"
+            app:thumbColor="@color/accent_red"
+            app:thumbRadius="12dp"
+            app:thumbElevation="6dp"
+            app:trackColorActive="@color/accent_red"
+            app:trackColorInactive="@color/surface_variant"
+            app:trackHeight="6dp"
+            app:tickVisible="false" />
+
+        <!-- Min / Max Labels -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:id="@+id/tvMinBet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Min $5"
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tvMaxBet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max $500"
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
+
+        <!-- Quick Select Chips -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quick pick"
+            android:fontFamily="@font/space_grotesk_regular"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="10dp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupQuickBet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:chipSpacingHorizontal="8dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipQuarter"
+                style="@style/BetQuickChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25%" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipHalf"
+                style="@style/BetQuickChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50%" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipThreeQ"
+                style="@style/BetQuickChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="75%" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMax"
+                style="@style/BetQuickChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAX" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="28dp"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelBet"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Cancel"
+                android:fontFamily="@font/space_grotesk_medium"
+                android:textSize="15sp"
+                android:letterSpacing="0.05"
+                android:textColor="@color/text_secondary"
+                app:strokeColor="@color/surface_variant"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmBet"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Place Bet"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="15sp"
+                android:letterSpacing="0.05"
+                android:textColor="@color/on_accent"
+                android:backgroundTint="@color/accent_red"
+                app:cornerRadius="16dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

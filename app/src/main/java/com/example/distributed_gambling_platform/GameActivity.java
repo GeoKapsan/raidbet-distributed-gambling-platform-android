@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Random;
 
 import shared.Request;
 
@@ -261,16 +262,74 @@ public class GameActivity extends AppCompatActivity {
                             if (elapsed[0] < totalDuration) {
                                 handler.postDelayed(this, tickInterval);
                             } else {
-                                String finalSymbol1 = getRandomSymbol();
-                                String finalSymbol2 = getRandomSymbol();
-                                String finalSymbol3 = getRandomSymbol();
+
+                                String winStatus = (String) response.get("winStatus");
+
+                                String symbol1;
+                                String symbol2;
+                                String symbol3;
+
+                                if (winStatus.equals("JACKPOT")) {
+                                    symbol1 = symbol2 = symbol3= getRandomSymbol();
+                                } else if (winStatus.equals("WIN")) {
+                                    Random r = new Random();
+                                    int randomInt = r.nextInt(3);
+
+                                    switch (randomInt) {
+                                        case 0:
+                                            symbol1 = symbol2 = getRandomSymbol();
+
+                                            do {
+                                                symbol3 = getRandomSymbol();
+                                            } while (symbol3.equals(symbol1));
+
+                                            break;
+
+                                        case 1:
+                                            symbol1 = symbol3 = getRandomSymbol();
+
+                                            do {
+                                                symbol2 = getRandomSymbol();
+                                            } while (symbol2.equals(symbol1));
+
+                                            break;
+
+                                        default:
+                                            symbol2 = symbol3 = getRandomSymbol();
+
+                                            do {
+                                                symbol1 = getRandomSymbol();
+                                            } while (symbol1.equals(symbol2));
+
+                                            break;
+                                    }
+
+                                } else {
+                                    symbol1 = getRandomSymbol();
+                                    symbol2 = getRandomSymbol();
+                                    symbol3 = getRandomSymbol();
+
+                                    while (symbol1.equals(symbol2) || symbol1.equals(symbol3) || symbol2.equals(symbol3)) {
+                                        symbol1 = getRandomSymbol();
+                                        symbol2 = getRandomSymbol();
+                                        symbol3 = getRandomSymbol();
+                                    }
+                                }
+
+                                final String finalSymbol1 = symbol1;
+                                final String finalSymbol2 = symbol2;
+                                final String finalSymbol3 = symbol3;
 
                                 slot1.setText(finalSymbol1);
+
                                 handler.postDelayed(() -> {
                                     slot2.setText(finalSymbol2);
+
                                     handler.postDelayed(() -> {
                                         slot3.setText(finalSymbol3);
+
                                         btnSpin.setEnabled(true);
+
                                         btnSpin.setText("SPIN");
                                     }, 200);
                                 }, 200);

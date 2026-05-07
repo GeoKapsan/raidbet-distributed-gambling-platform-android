@@ -32,10 +32,10 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        usernameInput = findViewById(R.id.editUsername);
-        passwordInput = findViewById(R.id.editPassword);
-        loginButton = findViewById(R.id.btnLogin);
-        registerButton = findViewById(R.id.btnRegister);
+        usernameInput = (EditText) findViewById(R.id.editUsername);
+        passwordInput = (EditText) findViewById(R.id.editPassword);
+        loginButton = (Button) findViewById(R.id.btnLogin);
+        registerButton = (Button) findViewById(R.id.btnRegister);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
