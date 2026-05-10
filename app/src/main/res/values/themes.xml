@@ -23,15 +23,15 @@
         <item name="android:fontFamily">@font/space_grotesk_medium</item>
         <item name="chipBackgroundColor">@color/surface_variant</item>
         <item name="checkedIconVisible">false</item>
-        <item name="chipStrokeColor">@color/input_stroke_selector</item>
-        <item name="chipStrokeWidth">1.5dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke_default</item>
+        <item name="chipStrokeWidth">2dp</item>
         <item name="chipCornerRadius">12dp</item>
         <item name="chipMinHeight">40dp</item>
     </style>
 
     <style name="FilterChipYellow" parent="FilterChip">
         <item name="android:textColor">@color/accent_yellow</item>
-        <item name="chipStrokeColor">@color/accent_yellow_20</item>
+        <item name="chipStrokeColor">@color/chip_stroke_yellow</item>
     </style>
 
     <style name="BetQuickChip" parent="Widget.MaterialComponents.Chip.Action">
@@ -48,6 +48,6 @@
     <style name="PrefixTextStyle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">@color/accent_green</item>
         <item name="android:fontFamily">@font/space_grotesk_bold</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 </resources>

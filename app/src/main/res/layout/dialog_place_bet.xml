@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dialog_place_bet.xml -->
-<!-- Usage: minBet and maxBet are set programmatically via Slider.valueFrom / valueTo -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,7 +19,6 @@
         android:paddingTop="32dp"
         android:paddingBottom="28dp">
 
-        <!-- Header -->
         <TextView
             android:id="@+id/tvDialogTitle"
             android:layout_width="wrap_content"
@@ -36,20 +33,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="How much will you wager?"
+            android:text="Bet high, win lot!"
             android:fontFamily="@font/space_grotesk_medium"
             android:textSize="22sp"
             android:textColor="@color/text_primary"
             android:layout_marginTop="4dp" />
 
-        <!-- Divider -->
         <View
             android:layout_width="40dp"
             android:layout_height="3dp"
             android:layout_marginTop="16dp"
             android:background="@color/accent_red" />
 
-        <!-- Bet Amount Display -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,8 +77,6 @@
 
         </LinearLayout>
 
-        <!-- Slider -->
-        <!-- valueFrom / valueTo are set in code: slider.valueFrom = minBet; slider.valueTo = maxBet -->
         <com.google.android.material.slider.Slider
             android:id="@+id/sliderBet"
             android:layout_width="match_parent"
@@ -95,14 +88,13 @@
             android:stepSize="1"
             app:haloColor="@color/accent_red_20"
             app:thumbColor="@color/accent_red"
-            app:thumbRadius="12dp"
+            app:thumbRadius="16dp"
             app:thumbElevation="6dp"
             app:trackColorActive="@color/accent_red"
             app:trackColorInactive="@color/surface_variant"
-            app:trackHeight="6dp"
+            app:trackHeight="8dp"
             app:tickVisible="false" />
 
-        <!-- Min / Max Labels -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -129,54 +121,6 @@
                 android:textColor="@color/text_secondary" />
 
         </LinearLayout>
-
-        <!-- Quick Select Chips -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick pick"
-            android:fontFamily="@font/space_grotesk_regular"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupQuickBet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:chipSpacingHorizontal="8dp">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipQuarter"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="25%" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipHalf"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="50%" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipThreeQ"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="75%" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipMax"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MAX" />
-
-        </com.google.android.material.chip.ChipGroup>
 
         <!-- Buttons -->
         <LinearLayout

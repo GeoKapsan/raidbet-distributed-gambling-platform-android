@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dialog_add_balance.xml -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,7 +19,6 @@
         android:paddingTop="32dp"
         android:paddingBottom="28dp">
 
-        <!-- Header -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Top up your balance"
+            android:text="Change your balance"
             android:fontFamily="@font/space_grotesk_medium"
             android:textSize="22sp"
             android:textColor="@color/text_primary"
@@ -46,7 +44,6 @@
             android:layout_marginTop="16dp"
             android:background="@color/accent_green" />
 
-        <!-- Current balance display -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +59,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                app:src="@drawable/ic_wallet"
+                app:srcCompat="@drawable/ic_wallet"
                 app:tint="@color/text_secondary"
                 android:contentDescription="Wallet icon" />
 
@@ -87,7 +84,6 @@
 
         </LinearLayout>
 
-        <!-- Amount input field -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilBalanceInput"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -112,67 +108,17 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etBalanceAmount"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="60dp"
                 android:inputType="numberDecimal"
                 android:fontFamily="@font/space_grotesk_bold"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="@color/text_primary"
-                app:textCursorDrawable="@drawable/cursor_green"
                 android:imeOptions="actionDone"
                 android:paddingStart="4dp"
                 android:paddingEnd="16dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Quick amount chips -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick add"
-            android:fontFamily="@font/space_grotesk_regular"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupQuickBalance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:chipSpacingHorizontal="8dp">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBalance10"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$10" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBalance50"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$50" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBalance100"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$100" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBalance500"
-                style="@style/BetQuickChip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$500" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <!-- Preview row: updated balance after deposit -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,7 +146,6 @@
 
         </LinearLayout>
 
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

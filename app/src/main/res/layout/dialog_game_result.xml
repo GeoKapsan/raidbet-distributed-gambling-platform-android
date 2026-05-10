@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dialog_game_result.xml -->
-<!--
-    Usage:
-      • Set root CardView background via app:cardBackgroundColor to one of:
-          @color/surface            (default / loss state)
-          @color/result_win_bg      (win state)
-          @color/result_jackpot_bg  (jackpot state)
-      • Toggle visibility of the three state groups below:
-          groupLose    → VISIBLE for loss
-          groupWin     → VISIBLE for win
-          groupJackpot → VISIBLE for jackpot
-      • Populate tvResultAmount with winnings / loss amount
-      • Populate tvResultMessage with flavor copy
--->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,10 +19,6 @@
         android:paddingEnd="28dp"
         android:paddingTop="40dp"
         android:paddingBottom="32dp">
-
-        <!-- ═══════════════════════════════════════
-             STATE: LOSE  (visibility="visible" when player lost)
-             ═══════════════════════════════════════ -->
         <LinearLayout
             android:id="@+id/groupLose"
             android:layout_width="match_parent"
@@ -45,7 +27,6 @@
             android:gravity="center_horizontal"
             android:visibility="visible">
 
-            <!-- Icon container -->
             <FrameLayout
                 android:layout_width="88dp"
                 android:layout_height="88dp"
@@ -55,7 +36,7 @@
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:layout_gravity="center"
-                    app:src="@drawable/ic_result_lose"
+                    app:srcCompat="@drawable/ic_result_lose"
                     app:tint="@color/accent_red"
                     android:contentDescription="Loss icon" />
 
@@ -95,9 +76,6 @@
 
         </LinearLayout>
 
-        <!-- ═══════════════════════════════════════
-             STATE: WIN  (visibility="gone" by default)
-             ═══════════════════════════════════════ -->
         <LinearLayout
             android:id="@+id/groupWin"
             android:layout_width="match_parent"
@@ -115,7 +93,7 @@
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:layout_gravity="center"
-                    app:src="@drawable/ic_result_win"
+                    app:srcCompat="@drawable/ic_result_win"
                     app:tint="@color/accent_green"
                     android:contentDescription="Win icon" />
 
@@ -154,9 +132,6 @@
 
         </LinearLayout>
 
-        <!-- ═══════════════════════════════════════
-             STATE: JACKPOT  (visibility="gone" by default)
-             ═══════════════════════════════════════ -->
         <LinearLayout
             android:id="@+id/groupJackpot"
             android:layout_width="match_parent"
@@ -165,19 +140,17 @@
             android:gravity="center_horizontal"
             android:visibility="gone">
 
-            <!-- Animated rainbow ring (use Lottie or AnimatedVectorDrawable in code) -->
             <FrameLayout
                 android:layout_width="104dp"
                 android:layout_height="104dp"
                 android:background="@drawable/bg_result_icon_jackpot">
 
-                <!-- Replace with LottieAnimationView for the spinning animation -->
                 <ImageView
                     android:id="@+id/ivJackpotIcon"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:layout_gravity="center"
-                    app:src="@drawable/ic_result_jackpot"
+                    app:srcCompat="@drawable/ic_result_jackpot"
                     app:tint="@color/accent_yellow"
                     android:contentDescription="Jackpot icon" />
 
@@ -217,7 +190,6 @@
 
         </LinearLayout>
 
-        <!-- ── STAT ROW ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -294,29 +266,16 @@
 
         </LinearLayout>
 
-        <!-- ── BUTTONS ── -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPlayAgain"
+            android:id="@+id/btnOkay"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="20dp"
-            android:text="Play Again"
+            android:text="Okay"
             android:fontFamily="@font/space_grotesk_bold"
             android:textSize="16sp"
             android:textColor="@color/on_accent"
             android:backgroundTint="@color/accent_green"
-            app:cornerRadius="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBackToLobby"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:text="Back to Lobby"
-            android:fontFamily="@font/space_grotesk_medium"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
             app:cornerRadius="16dp" />
 
     </LinearLayout>

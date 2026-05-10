@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,28 +50,25 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View listItem = LayoutInflater.from(this.context).inflate(R.layout.list_item, parent, false);
 
-        TextView listItemText = (TextView) listItem.findViewById(R.id.list_item);
-        ImageView listItemImage = (ImageView) listItem.findViewById(R.id.image);
-        Button listItemBtnRate = (Button) listItem.findViewById(R.id.btnRate);
+        LinearLayout linearLayoutGame = listItem.findViewById(R.id.linearLayoutGame);
+        ImageView ivGameLogo = listItem.findViewById(R.id.ivGameLogo);
+        TextView tvGameName = listItem.findViewById(R.id.tvGameName);
+        TextView tvRiskLevel = listItem.findViewById(R.id.tvRiskLevel);
+        TextView tvBetCat = listItem.findViewById(R.id.tvBetCat);
+        TextView tvStars = listItem.findViewById(R.id.tvStars);
+        ImageButton btnRateGame = listItem.findViewById(R.id.btnRateGame);
 
         ListItem item = (ListItem) getItem(position);
 
-        listItemText.setText(item.text);
-        listItemImage.setImageBitmap(item.image);
+        tvGameName.setText(item.text);
+        ivGameLogo.setImageBitmap(item.image);
+        tvRiskLevel.setText(item.riskLevel);
+        tvBetCat.setText("  ·  " + item.bettingCategory + "  ·  ");
+        tvStars.setText("★ " + item.stars);
 
-        listItemText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onPlayClick(item);
-            }
-        });
+        linearLayoutGame.setOnClickListener(v -> listener.onPlayClick(item));
 
-        listItemBtnRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onRateClick(item);
-            }
-        });
+        btnRateGame.setOnClickListener(v -> listener.onRateClick(item));
 
         return listItem;
     }

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- dialog_game_filters.xml -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,7 +19,6 @@
         android:paddingTop="32dp"
         android:paddingBottom="28dp">
 
-        <!-- Header -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Find your perfect game"
+            android:text="Find your game"
             android:fontFamily="@font/space_grotesk_medium"
             android:textSize="22sp"
             android:textColor="@color/text_primary"
@@ -46,7 +44,6 @@
             android:layout_marginTop="16dp"
             android:background="@color/accent_blue" />
 
-        <!-- ── RISK LEVEL ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +93,6 @@
 
         </com.google.android.material.chip.ChipGroup>
 
-        <!-- ── BETTING CATEGORY ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -123,7 +119,6 @@
                 android:text="Any"
                 android:checked="true" />
 
-            <!-- $ = low stakes -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCatLow"
                 style="@style/FilterChipYellow"
@@ -131,15 +126,13 @@
                 android:layout_height="wrap_content"
                 android:text="$" />
 
-            <!-- $$ = mid stakes -->
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipCatMid"
+                android:id="@+id/chipCatMedium"
                 style="@style/FilterChipYellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$$" />
 
-            <!-- $$$ = high stakes -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCatHigh"
                 style="@style/FilterChipYellow"
@@ -149,7 +142,6 @@
 
         </com.google.android.material.chip.ChipGroup>
 
-        <!-- ── MINIMUM RATING ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,7 +152,6 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Star rating row: 5 toggle buttons acting as stars -->
         <LinearLayout
             android:id="@+id/layoutStars"
             android:layout_width="wrap_content"
@@ -168,14 +159,13 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Stars are toggled programmatically; tapping star N sets minRating = N -->
             <ImageButton
                 android:id="@+id/star1"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:src="@drawable/ic_star_filled"
                 android:contentDescription="1 star"
+                app:srcCompat="@drawable/ic_star_outline"
                 app:tint="@color/accent_yellow" />
 
             <ImageButton
@@ -183,40 +173,39 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:src="@drawable/ic_star_outline"
                 android:contentDescription="2 stars"
-                app:tint="@color/surface_variant" />
+                app:srcCompat="@drawable/ic_star_outline"
+                app:tint="@color/accent_yellow" />
 
             <ImageButton
                 android:id="@+id/star3"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:src="@drawable/ic_star_outline"
                 android:contentDescription="3 stars"
-                app:tint="@color/surface_variant" />
+                app:srcCompat="@drawable/ic_star_outline"
+                app:tint="@color/accent_yellow" />
 
             <ImageButton
                 android:id="@+id/star4"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:src="@drawable/ic_star_outline"
                 android:contentDescription="4 stars"
-                app:tint="@color/surface_variant" />
+                app:srcCompat="@drawable/ic_star_outline"
+                app:tint="@color/accent_yellow" />
 
             <ImageButton
                 android:id="@+id/star5"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:src="@drawable/ic_star_outline"
                 android:contentDescription="5 stars"
-                app:tint="@color/surface_variant" />
+                app:srcCompat="@drawable/ic_star_outline"
+                app:tint="@color/accent_yellow" />
 
         </LinearLayout>
 
-        <!-- ── ACTION BUTTONS ── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
