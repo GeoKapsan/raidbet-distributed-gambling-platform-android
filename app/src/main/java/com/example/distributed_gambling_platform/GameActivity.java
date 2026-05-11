@@ -37,7 +37,7 @@ public class GameActivity extends AppCompatActivity {
     float balance, bettingAmount, minBet, maxBet;
     float amountWon;
     String winStatus;
-    TextView tvGameUsername, tvGameBalance, tvGameName, tvJackpot, tvSlot1, tvSlot2, tvSlot3;
+    TextView tvGameUsername, tvGameBalance, tvGameName, tvJackpot, tvGameCurrentBet, tvSlot1, tvSlot2, tvSlot3;
     MaterialButton btnSpin, btnBet;
     ImageButton btnBackToDashboard;
 
@@ -69,7 +69,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateBalance(float newBalance) {
         balance = newBalance;
-        tvGameBalance.setText(formatAmount(balance));
+        tvGameBalance.setText("$" + formatAmount(balance));
     }
 
     private void bindViews(Intent i) {
@@ -90,6 +90,9 @@ public class GameActivity extends AppCompatActivity {
         tvJackpot = findViewById(R.id.tvJackpot);
         tvJackpot.setText("  x" + formatAmount(i.getFloatExtra("JACKPOT", 0f)));
 
+        tvGameCurrentBet = findViewById(R.id.tvGameCurrentBet);
+        tvGameCurrentBet.setText("$0");
+
         tvSlot1 = findViewById(R.id.tvSlot1);
         tvSlot2 = findViewById(R.id.tvSlot2);
         tvSlot3 = findViewById(R.id.tvSlot3);
@@ -102,6 +105,7 @@ public class GameActivity extends AppCompatActivity {
         PlaceBetDialog betDialog = new PlaceBetDialog(GameActivity.this, balance, minBet, maxBet,
                 bet -> {
             bettingAmount = bet;
+            tvGameCurrentBet.setText("$" + formatAmount(bettingAmount));
         });
         betDialog.show();
     }
@@ -126,15 +130,11 @@ public class GameActivity extends AppCompatActivity {
             onBackPressed();
         });
 
-        btnBet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (balance > 0f) {
-                    showBetDialog();
-                } else {
-                    Toast.makeText(GameActivity.this, "Please add money to bet", Toast.LENGTH_SHORT).show();
-                }
-                btnBet.setText(formatAmount(bettingAmount));
+        btnBet.setOnClickListener(v -> {
+            if (balance > 0f) {
+                showBetDialog();
+            } else {
+                Toast.makeText(GameActivity.this, "Please add money to bet", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -157,7 +157,7 @@ public class GameActivity extends AppCompatActivity {
                     winStatus = (String) response.get("winStatus");
 
                     if (!"OK".equals(status)) {
-                        runOnUiThread(()-> {
+                        runOnUiThread(() -> {
                                     Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show();
                                     btnSpin.setEnabled(true);
                                     btnSpin.setText("SPIN");
@@ -264,7 +264,8 @@ public class GameActivity extends AppCompatActivity {
                                 showPlayResult();
 
                                 // Clear bet
-                                bettingAmount = 0f;
+                                bettingAmount = balance > bettingAmount ? bettingAmount : 0f;
+                                tvGameCurrentBet.setText("$" + formatAmount(bettingAmount));
                             }
                         }
                     };
