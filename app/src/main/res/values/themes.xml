@@ -6,4 +6,48 @@
     </style>
 
     <style name="Theme.Distributedgamblingplatform" parent="Base.Theme.Distributedgamblingplatform" />
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent_red</item>
+        <item name="colorPrimaryVariant">@color/accent_red</item>
+        <item name="colorSecondary">@color/accent_green</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:fontFamily">@font/space_grotesk_regular</item>
+    </style>
+
+    <style name="FilterChip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/space_grotesk_medium</item>
+        <item name="chipBackgroundColor">@color/surface_variant</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipStrokeColor">@color/chip_stroke_default</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="chipCornerRadius">12dp</item>
+        <item name="chipMinHeight">40dp</item>
+    </style>
+
+    <style name="FilterChipYellow" parent="FilterChip">
+        <item name="android:textColor">@color/accent_yellow</item>
+        <item name="chipStrokeColor">@color/chip_stroke_yellow</item>
+    </style>
+
+    <style name="BetQuickChip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/space_grotesk_medium</item>
+        <item name="chipBackgroundColor">@color/surface_variant</item>
+        <item name="chipStrokeColor">@color/surface_variant</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">12dp</item>
+        <item name="chipMinHeight">40dp</item>
+    </style>
+
+    <style name="PrefixTextStyle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/accent_green</item>
+        <item name="android:fontFamily">@font/space_grotesk_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

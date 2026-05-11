@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
+    android:layout_marginEnd="24dp"
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="32dp">
+        <LinearLayout
+            android:id="@+id/groupLose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="visible">
+
+            <FrameLayout
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:background="@drawable/bg_result_icon_lose">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_result_lose"
+                    app:tint="@color/accent_red"
+                    android:contentDescription="Loss icon" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BETTER LUCK\nNEXT TIME"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="26sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.1"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/tvLoseAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-$25"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="42sp"
+                android:textColor="@color/accent_red"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tvLoseMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The house wins this round."
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/groupWin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:background="@drawable/bg_result_icon_win">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_result_win"
+                    app:tint="@color/accent_green"
+                    android:contentDescription="Win icon" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YOU WIN!"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="30sp"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/tvWinAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+$75"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="42sp"
+                android:textColor="@color/accent_green"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tvWinMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nice one — your balance has been updated."
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/groupJackpot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="104dp"
+                android:layout_height="104dp"
+                android:background="@drawable/bg_result_icon_jackpot">
+
+                <ImageView
+                    android:id="@+id/ivJackpotIcon"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_result_jackpot"
+                    app:tint="@color/accent_yellow"
+                    android:contentDescription="Jackpot icon" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎰  JACKPOT!"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="32sp"
+                android:textColor="@color/accent_yellow"
+                android:gravity="center"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/tvJackpotAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+$10,000"
+                android:fontFamily="@font/space_grotesk_bold"
+                android:textSize="44sp"
+                android:textColor="@color/accent_yellow"
+                android:layout_marginTop="6dp" />
+
+            <TextView
+                android:id="@+id/tvJackpotMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You hit the grand prize.\nEnjoy your winnings!"
+                android:fontFamily="@font/space_grotesk_regular"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.4"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_stat_row"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BET"
+                    android:fontFamily="@font/space_grotesk_regular"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.12"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/tvStatBet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$25"
+                    android:fontFamily="@font/space_grotesk_bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="32dp"
+                android:background="@color/surface_variant" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NEW BALANCE"
+                    android:fontFamily="@font/space_grotesk_regular"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.12"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/tvStatNewBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$475"
+                    android:fontFamily="@font/space_grotesk_bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOkay"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:text="Okay"
+            android:fontFamily="@font/space_grotesk_bold"
+            android:textSize="16sp"
+            android:textColor="@color/on_accent"
+            android:backgroundTint="@color/accent_green"
+            app:cornerRadius="16dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

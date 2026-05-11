@@ -9,17 +9,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import shared.Request;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText usernameInput, passwordInput;
-    private Button loginButton, registerButton;
+    private TextInputLayout tilUsername, tilPassword;
+    private TextInputEditText etUsername, etPassword;
+    private MaterialButton btnSignIn, btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,43 +39,68 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        usernameInput = findViewById(R.id.editUsername);
-        passwordInput = findViewById(R.id.editPassword);
-        loginButton = findViewById(R.id.btnLogin);
-        registerButton = findViewById(R.id.btnRegister);
+        bindViews();
+        setupInputField();
+        setupButtons();
+    }
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+    private void bindViews() {
+        tilUsername = findViewById(R.id.tilUsername);
+        tilPassword = findViewById(R.id.tilPassword);
+
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
+
+        btnSignIn = findViewById(R.id.btnSignIn);
+        btnRegister = findViewById(R.id.btnRegister);
+    }
+
+    private void setupInputField() {
+        etUsername.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-
-                i.putExtra("username", usernameInput.getText().toString());
-                i.putExtra("password", passwordInput.getText().toString());
-                startActivity(i);
+            public void afterTextChanged(Editable s) {
+                tilUsername.setError(null);
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
             @Override
-            public void onClick(View v) {
-
-                final String username = usernameInput.getText().toString();
-                final String password = passwordInput.getText().toString();
-
-                if (username.isBlank() || password.isBlank()) {
-                    Toast.makeText(LoginActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                loginButton.setEnabled(false);
-
-                Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
-
-                i.putExtra("username", username);
-                //i.putExtra("password", passwordInput.getText().toString());
-                startActivity(i);
+            public void afterTextChanged(Editable s) {
+                tilPassword.setError(null);
             }
         });
+    }
 
+    private void setupButtons() {
+        btnSignIn.setOnClickListener(v -> {
+            String username = etUsername.getText() != null ? etUsername.getText().toString().trim() : "";
+
+            if (username.isEmpty()) {
+                tilUsername.setError("Please enter a username");
+                return;
+            }
+
+            String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
+
+            if (password.isEmpty()) {
+                tilPassword.setError("Please enter a password");
+                return;
+            }
+
+            Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+            i.putExtra("USERNAME", username);
+            //i.putExtra("PASSWORD", password);
+            startActivity(i);
+        });
+
+        btnRegister.setOnClickListener(v -> {
+            
+        });
     }
 }

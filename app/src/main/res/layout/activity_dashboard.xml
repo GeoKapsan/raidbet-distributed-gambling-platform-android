@@ -1,58 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardActivity">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:id="@+id/textUsername"
-        android:layout_width="81dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Username"
-        android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:fillViewport="true">
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="111dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="16dp"
-        android:text="Search"
-        app:layout_constraintStart_toEndOf="@+id/textUsername"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="406dp"
-        android:layout_height="624dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSearch"
-        app:layout_constraintVertical_bias="0.588" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="28dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="56dp"
+                android:paddingBottom="8dp">
 
-    <Button
-        android:id="@+id/btnBalance"
-        android:layout_width="122dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/cardview_shadow_end_color"
-        android:text="Balance"
-        android:textColor="@color/blue"
-        app:icon="@android:drawable/ic_input_add"
-        app:iconPadding="0dp"
-        app:iconTint="@color/blue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.771"
-        app:layout_constraintStart_toEndOf="@+id/btnSearch"
-        app:layout_constraintTop_toTopOf="parent" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good evening,"
+                        android:fontFamily="@font/space_grotesk_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/tvDashboardUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Player123"
+                        android:fontFamily="@font/space_grotesk_bold"
+                        android:textSize="26sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_result_icon_win">
+
+                    <TextView
+                        android:id="@+id/tvAvatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="P"
+                        android:fontFamily="@font/space_grotesk_bold"
+                        android:textSize="20sp"
+                        android:textColor="@color/accent_green" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="YOUR BALANCE"
+                            android:fontFamily="@font/space_grotesk_bold"
+                            android:textSize="11sp"
+                            android:letterSpacing="0.15"
+                            android:textColor="@color/accent_green"
+                            android:textAllCaps="true" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="+ Add Funds"
+                            android:fontFamily="@font/space_grotesk_medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/accent_green"
+                            android:backgroundTint="@color/accent_green_20"
+                            app:cornerRadius="10dp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDashboardBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$1,250.00"
+                        android:fontFamily="@font/space_grotesk_bold"
+                        android:textSize="44sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/accent_red" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/accent_yellow" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/accent_green" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/accent_blue" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="28dp"
+                android:paddingEnd="24dp"
+                android:layout_marginTop="36dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AVAILABLE GAMES"
+                        android:fontFamily="@font/space_grotesk_bold"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.15"
+                        android:textColor="@color/accent_yellow"
+                        android:textAllCaps="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pick your game"
+                        android:fontFamily="@font/space_grotesk_medium"
+                        android:textSize="20sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSearch"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Search"
+                    android:fontFamily="@font/space_grotesk_medium"
+                    android:textSize="13sp"
+                    android:textColor="@color/accent_blue"
+                    app:strokeColor="@color/accent_blue"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_filter_game"
+                    app:iconTint="@color/accent_blue"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="3dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/accent_yellow" />
+            
+            <ListView
+                android:id="@+id/listGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

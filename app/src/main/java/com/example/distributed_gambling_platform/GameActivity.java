@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,22 +22,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Random;
 
 import shared.Request;
 
 public class GameActivity extends AppCompatActivity {
 
-    double balance, bettingAmount;
-    double amountWon;
-    TextView textViewUsername, gameName, slot1, slot2, slot3;
-    Button btnBalance, btnSpin, btnBet;
-    ImageView imageViewGame;
-
-    AlertDialog balanceDialog, betDialog, resultDialog;
+    float balance, bettingAmount, minBet, maxBet;
+    float amountWon;
+    String winStatus;
+    TextView tvGameUsername, tvGameBalance, tvGameName, tvJackpot, tvGameCurrentBet, tvSlot1, tvSlot2, tvSlot3;
+    MaterialButton btnSpin, btnBet;
+    ImageButton btnBackToDashboard;
 
     final String[] symbols = {"🍒", "🍋", "⭐", "🔔", "🍇"};
 
@@ -64,6 +67,226 @@ public class GameActivity extends AppCompatActivity {
         return symbols[(int) (Math.random() * symbols.length)];
     }
 
+    private void updateBalance(float newBalance) {
+        balance = newBalance;
+        tvGameBalance.setText("$" + formatAmount(balance));
+    }
+
+    private void bindViews(Intent i) {
+        btnBackToDashboard = findViewById(R.id.btnBackToDashboard);
+
+        tvGameUsername = findViewById(R.id.tvGameUsername);
+        tvGameUsername.setText(i.getStringExtra("USERNAME"));
+
+        tvGameName = findViewById(R.id.tvGameName);
+        tvGameName.setText(i.getStringExtra("SELECTED_GAME"));
+
+        tvGameBalance = findViewById(R.id.tvGameBalance);
+        updateBalance(i.getFloatExtra("BALANCE", 0f));
+
+        minBet = i.getFloatExtra("MINBET", 0f);
+        maxBet = i.getFloatExtra("MAXBET", 0f);
+
+        tvJackpot = findViewById(R.id.tvJackpot);
+        tvJackpot.setText("  x" + formatAmount(i.getFloatExtra("JACKPOT", 0f)));
+
+        tvGameCurrentBet = findViewById(R.id.tvGameCurrentBet);
+        tvGameCurrentBet.setText("$0");
+
+        tvSlot1 = findViewById(R.id.tvSlot1);
+        tvSlot2 = findViewById(R.id.tvSlot2);
+        tvSlot3 = findViewById(R.id.tvSlot3);
+
+        btnSpin = findViewById(R.id.btnSpin);
+        btnBet = findViewById(R.id.btnBet);
+    }
+
+    private void showBetDialog() {
+        PlaceBetDialog betDialog = new PlaceBetDialog(GameActivity.this, balance, minBet, maxBet,
+                bet -> {
+            bettingAmount = bet;
+            tvGameCurrentBet.setText("$" + formatAmount(bettingAmount));
+        });
+        betDialog.show();
+    }
+
+    private void showPlayResult() {
+
+        GameResultDialog.ResultType resultType = GameResultDialog.ResultType.LOSE;
+        GameResultDialog resultDialog;
+
+        if (winStatus.equals("WIN")) {
+            resultType = GameResultDialog.ResultType.WIN;
+        } else if (winStatus.equals("JACKPOT")) {
+            resultType = GameResultDialog.ResultType.JACKPOT;
+        }
+
+        resultDialog = new GameResultDialog(GameActivity.this, resultType, amountWon, bettingAmount, balance);
+        resultDialog.show();
+    }
+
+    private void setupButtons() {
+        btnBackToDashboard.setOnClickListener(v -> {
+            onBackPressed();
+        });
+
+        btnBet.setOnClickListener(v -> {
+            if (balance > 0f) {
+                showBetDialog();
+            } else {
+                Toast.makeText(GameActivity.this, "Please add money to bet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnSpin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnSpin.setEnabled(false);
+
+                //Create Request & send to Master
+                Request request = new Request(Request.Type.PLAY);
+                request.put("gameName", tvGameName.getText().toString());
+                request.put("bettingAmount", bettingAmount);
+                request.put("playerId", tvGameUsername.getText().toString());
+
+                new Thread(() -> {
+                    //Receive response from Master
+                    Request response = sendToMaster(request);
+
+                    String status = (String) response.get("status");
+                    winStatus = (String) response.get("winStatus");
+
+                    if (!"OK".equals(status)) {
+                        runOnUiThread(() -> {
+                                    Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show();
+                                    btnSpin.setEnabled(true);
+                                    btnSpin.setText("SPIN");
+                                }
+                        );
+                        return;
+                    }
+
+                    btnSpin.setText("SPINNING...");
+
+                    amountWon = (Float) response.get("amountWon");
+
+                    final long totalDuration = 2000L;
+                    final long tickInterval = 80L;
+                    final long[] elapsed = {0L};
+
+                    Runnable ticker = new Runnable() {
+                        @Override
+                        public void run() {
+
+                            tvSlot1.setText(getRandomSymbol());
+                            tvSlot2.setText(getRandomSymbol());
+                            tvSlot3.setText(getRandomSymbol());
+
+                            elapsed[0] += tickInterval;
+
+                            if (elapsed[0] < totalDuration) {
+                                handler.postDelayed(this, tickInterval);
+                            } else {
+
+                                String winStatus = (String) response.get("winStatus");
+
+                                String symbol1;
+                                String symbol2;
+                                String symbol3;
+
+                                if (winStatus.equals("JACKPOT")) {
+                                    symbol1 = symbol2 = symbol3= getRandomSymbol();
+                                } else if (winStatus.equals("WIN")) {
+                                    Random r = new Random();
+                                    int randomInt = r.nextInt(3);
+
+                                    switch (randomInt) {
+                                        case 0:
+                                            symbol1 = symbol2 = getRandomSymbol();
+
+                                            do {
+                                                symbol3 = getRandomSymbol();
+                                            } while (symbol3.equals(symbol1));
+
+                                            break;
+
+                                        case 1:
+                                            symbol1 = symbol3 = getRandomSymbol();
+
+                                            do {
+                                                symbol2 = getRandomSymbol();
+                                            } while (symbol2.equals(symbol1));
+
+                                            break;
+
+                                        default:
+                                            symbol2 = symbol3 = getRandomSymbol();
+
+                                            do {
+                                                symbol1 = getRandomSymbol();
+                                            } while (symbol1.equals(symbol2));
+
+                                            break;
+                                    }
+
+                                } else {
+                                    symbol1 = getRandomSymbol();
+                                    symbol2 = getRandomSymbol();
+                                    symbol3 = getRandomSymbol();
+
+                                    while (symbol1.equals(symbol2) || symbol1.equals(symbol3) || symbol2.equals(symbol3)) {
+                                        symbol1 = getRandomSymbol();
+                                        symbol2 = getRandomSymbol();
+                                        symbol3 = getRandomSymbol();
+                                    }
+                                }
+
+                                final String finalSymbol1 = symbol1;
+                                final String finalSymbol2 = symbol2;
+                                final String finalSymbol3 = symbol3;
+
+                                tvSlot1.setText(finalSymbol1);
+
+                                handler.postDelayed(() -> {
+                                    tvSlot2.setText(finalSymbol2);
+
+                                    handler.postDelayed(() -> {
+                                        tvSlot3.setText(finalSymbol3);
+
+                                        btnSpin.setEnabled(true);
+
+                                        btnSpin.setText("SPIN");
+                                    }, 200);
+                                }, 200);
+
+                                updateBalance(balance + amountWon - bettingAmount);
+
+                                showPlayResult();
+
+                                // Clear bet
+                                bettingAmount = balance > bettingAmount ? bettingAmount : 0f;
+                                tvGameCurrentBet.setText("$" + formatAmount(bettingAmount));
+                            }
+                        }
+                    };
+
+                    handler.post(ticker);
+                }).start();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent returnToDashboardIntent = new Intent();
+
+        returnToDashboardIntent.putExtra("NEW_BALANCE", balance);
+
+        setResult(RESULT_OK, returnToDashboardIntent);
+
+        super.onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,199 +299,14 @@ public class GameActivity extends AppCompatActivity {
         });
 
         // Create appearance from previous screen
+        bindViews(getIntent());
+        setupButtons();
+    }
 
-        Intent i = getIntent();
-
-        textViewUsername = (TextView) findViewById(R.id.textUsernameGame);
-        textViewUsername.setText(i.getStringExtra("username"));
-
-        btnBalance = (Button) findViewById(R.id.btnBalanceGame);
-        btnBet = (Button) findViewById(R.id.btnBet);
-        btnBalance.setText(String.format("$%.2f", i.getDoubleExtra("balance", 0.0)));
-        balance = i.getDoubleExtra("balance", 0.0);
-
-        imageViewGame = (ImageView) findViewById(R.id.imageViewGame);
-        imageViewGame.setImageBitmap(ImageVault.getImageBm());
-
-        gameName = (TextView) findViewById(R.id.textViewGameName);
-        gameName.setText(i.getStringExtra("gameName"));
-
-        slot1 = (TextView) findViewById(R.id.slot1);
-        slot2 = (TextView) findViewById(R.id.slot2);
-        slot3 = (TextView) findViewById(R.id.slot3);
-        btnSpin = (Button) findViewById(R.id.btnSpin);
-
-        btnBet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                builder.setTitle("Add betting amount");
-
-                EditText input = new EditText(GameActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setHint("Enter amount");
-                builder.setView(input);
-
-                builder.setPositiveButton("Confirm", (dialog, which) -> {
-                    String bettingAmountStr = input.getText().toString();
-                    if (!bettingAmountStr.isBlank()) {
-                        bettingAmount = Double.parseDouble(bettingAmountStr);
-                        if (bettingAmount <= balance) {
-                            btnBet.setText(String.format("$%.2f", bettingAmount));
-                        } else {
-                            bettingAmount = 0.0;
-                            Toast.makeText(GameActivity.this, "Not enough balance to bet", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                if (!isFinishing()) {
-                    betDialog = builder.create();
-                    betDialog.show();
-                }
-            }
-        });
-
-        btnSpin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnSpin.setEnabled(false);
-
-                //Create Request & send to Master
-                Request request = new Request(Request.Type.PLAY);
-                request.put("gameName", gameName.getText().toString());
-
-                request.put("bettingAmount", bettingAmount);
-
-                request.put("playerId", textViewUsername.getText().toString());
-
-                new Thread(() -> {
-                    //Receive response from Master
-                    Request response = sendToMaster(request);
-
-                    String status = (String) response.get("status");
-
-                    if (!"OK".equals(status)) {
-                        runOnUiThread(()-> {
-                                Toast.makeText(GameActivity.this, "[FAIL] " + response.get("message"), Toast.LENGTH_SHORT).show();
-                                btnSpin.setEnabled(true);
-                                btnSpin.setText("SPIN");
-                            }
-                        );
-                        return;
-                    }
-
-                    btnSpin.setText("SPINNING...");
-
-                    amountWon = (Double) response.get("amountWon");
-
-                    balance += amountWon - bettingAmount;
-
-                    bettingAmount = 0.0;
-                    btnBet.setText("0.0");
-
-                    final long totalDuration = 2000L;
-                    final long tickInterval = 80L;
-                    final long[] elapsed = {0L};
-
-                    Runnable ticker = new Runnable() {
-                        @Override
-                        public void run() {
-
-                            slot1.setText(getRandomSymbol());
-                            slot2.setText(getRandomSymbol());
-                            slot3.setText(getRandomSymbol());
-
-                            elapsed[0] += tickInterval;
-
-                            if (elapsed[0] < totalDuration) {
-                                handler.postDelayed(this, tickInterval);
-                            } else {
-                                String finalSymbol1 = getRandomSymbol();
-                                String finalSymbol2 = getRandomSymbol();
-                                String finalSymbol3 = getRandomSymbol();
-
-                                slot1.setText(finalSymbol1);
-                                handler.postDelayed(() -> {
-                                    slot2.setText(finalSymbol2);
-                                    handler.postDelayed(() -> {
-                                        slot3.setText(finalSymbol3);
-                                        btnSpin.setEnabled(true);
-                                        btnSpin.setText("SPIN");
-                                    }, 200);
-                                }, 200);
-
-                                btnBalance.setText(String.format("$%.2f", balance));
-                            }
-                        }
-                    };
-
-                    handler.post(ticker);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-
-                    View customView = LayoutInflater.from(GameActivity.this).inflate(R.layout.dialog_play_result, null);
-                    builder.setView(customView);
-
-                    TextView textViewResultTitle = (TextView) customView.findViewById(R.id.textViewResultTitle);
-                    TextView textViewResultBody = (TextView) customView.findViewById(R.id.textViewResultBody);
-
-                    if (amountWon == 0) {
-                        textViewResultTitle.setText("You lose...");
-                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#F44336"));
-                    } else {
-                        textViewResultTitle.setText("You Win!");
-                        textViewResultTitle.setTextColor(android.graphics.Color.parseColor("#4CAF50"));
-                    }
-
-                    textViewResultBody.setText("Amount: " + String.format("$%.2f", amountWon));
-
-                    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-                    runOnUiThread(() -> {
-                        resultDialog = builder.create();
-
-                        if (resultDialog.getWindow() != null) {
-                            //resultDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                            int dialogWidth = (int) (screenWidth * 0.25);
-                            resultDialog.getWindow().setLayout(dialogWidth, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-                        }
-
-                        resultDialog.show();
-                    });
-                }).start();
-            }
-        });
-
-        btnBalance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                builder.setTitle("Add balance");
-
-                EditText input = new EditText(GameActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                input.setHint("Enter amount");
-                builder.setView(input);
-
-
-                builder.setPositiveButton("Confirm", (dialog, which) -> {
-                    String balanceStr = input.getText().toString();
-                    if (!balanceStr.isBlank()) {
-                        balance += Double.parseDouble(balanceStr);
-                        btnBalance.setText(String.format("$%.2f", balance));
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                if (!isFinishing()) {
-                    balanceDialog = builder.create();
-                    balanceDialog.show();
-                }
-            }
-        });
+    private String formatAmount(float amount) {
+        if (amount == Math.floor(amount)) {
+            return Integer.toString((int) amount);
+        }
+        return String.format("%.2f", amount);
     }
 }

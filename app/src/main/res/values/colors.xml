@@ -3,4 +3,31 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#3682F4</color>
+    <color name="background">       #0D0D10 </color>
+    <color name="surface">          #161620 </color>
+    <color name="surface_variant">  #22222E </color>
+
+    <color name="accent_red">       #E8221A </color>
+    <color name="accent_red_20">    #33E8221A</color>
+
+    <color name="accent_yellow">    #F5C518 </color>
+    <color name="accent_yellow_20"> #33F5C518</color>
+
+    <color name="accent_green">     #22C55E </color>
+    <color name="accent_green_20">  #3322C55E</color>
+
+    <color name="accent_cyan">      #7DD3FC </color>
+    <color name="accent_blue">      #2563EB </color>
+    <color name="accent_blue_20">   #332563EB</color>
+
+    <color name="text_primary">     #F0F0F8 </color>
+    <color name="text_secondary">   #7A7A99 </color>
+
+    <color name="on_accent">        #FFFFFF </color>
+
+    <color name="result_win_bg">    #0F2318 </color>
+    <color name="result_jackpot_bg">#1F1A06 </color>
+
+    <color name="input_stroke_focused"> #22C55E </color>
+    <color name="input_stroke_default"> #22222E </color>
 </resources>
