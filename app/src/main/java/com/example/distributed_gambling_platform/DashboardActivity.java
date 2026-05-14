@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +20,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Properties;
 
 import shared.GameSearch;
 import shared.Request;
@@ -227,8 +231,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private Request sendToMaster(Request request) {
+        Properties config = new Properties();
         try (
-                Socket client = new Socket("10.0.2.2", 5001);
+                InputStream in = getAssets().open("config.properties");
+                ) {
+            config.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String masterHost = config.getProperty("master.host");
+        int masterPort = Integer.parseInt(config.getProperty("master.port"));
+
+        try (
+                Socket client = new Socket(masterHost, masterPort);
                 ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
         ) {

@@ -25,9 +25,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Properties;
 import java.util.Random;
 
 import shared.Request;
@@ -46,8 +48,20 @@ public class GameActivity extends AppCompatActivity {
     final Handler handler = new Handler(Looper.getMainLooper());
 
     private Request sendToMaster(Request request) {
+        Properties config = new Properties();
         try (
-                Socket client = new Socket("10.0.2.2", 5001);
+                InputStream in = getAssets().open("config.properties");
+        ) {
+            config.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String masterHost = config.getProperty("master.host");
+        int masterPort = Integer.parseInt(config.getProperty("master.port"));
+
+        try (
+                Socket client = new Socket(masterHost, masterPort);
                 ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
         ) {
