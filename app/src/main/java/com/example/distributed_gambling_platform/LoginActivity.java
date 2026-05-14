@@ -24,9 +24,9 @@ import shared.Request;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputLayout tilUsername, tilPassword;
-    private TextInputEditText etUsername, etPassword;
-    private MaterialButton btnSignIn, btnRegister;
+    private TextInputLayout tilUsername;
+    private TextInputEditText etUsername;
+    private MaterialButton btnSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void bindViews() {
         tilUsername = findViewById(R.id.tilUsername);
-        tilPassword = findViewById(R.id.tilPassword);
 
         etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-
         btnSignIn = findViewById(R.id.btnSignIn);
-        btnRegister = findViewById(R.id.btnRegister);
     }
 
     private void setupInputField() {
@@ -66,15 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                tilPassword.setError(null);
-            }
-        });
     }
 
     private void setupButtons() {
@@ -86,21 +74,11 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
-
-            if (password.isEmpty()) {
-                tilPassword.setError("Please enter a password");
-                return;
-            }
 
             Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
             i.putExtra("USERNAME", username);
-            //i.putExtra("PASSWORD", password);
             startActivity(i);
         });
 
-        btnRegister.setOnClickListener(v -> {
-            
-        });
     }
 }

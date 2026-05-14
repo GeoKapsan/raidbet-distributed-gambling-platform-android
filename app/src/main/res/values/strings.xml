@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">distributed-gambling-platform</string>
+    <string name="app_name">RaidBet</string>
+    <string name="welcome_title">Welcome to RaidBet</string>
+    <string name="welcome_subtitle">Enter your username to start playing.</string>
+    <string name="hint_username">Username</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="footer_text">Online Betting</string>
 </resources>
