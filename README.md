@@ -1,10 +1,10 @@
-# RaidBet
+# RaidBet: A Distributed Gambling Platform (Frontend)
 
 A sleek, modern mobile gambling app for Android, built as the frontend companion to a fully distributed backend system developed for the **Distributed Systems (3664)** course at the **Athens University of Economics and Business**.
 
 The backend runs across multiple machines simultaneously, handles many players at once, and resolves every bet using cryptographically secure random numbers. All built from scratch in Java with no external libraries.
 
-> **Backend repo:** [https://github.com/GeoKapsan/distributed-gambling-platform-android](https://github.com/GeoKapsan/raidbet-distributed-gambling-platform)
+> **Backend repo:** [https://github.com/GeoKapsan/raidbet-distributed-gambling-platform](https://github.com/GeoKapsan/raidbet-distributed-gambling-platform)
 
 ---
 
