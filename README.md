@@ -10,7 +10,13 @@ The backend runs across multiple machines simultaneously, handles many players a
 
 ## Screenshots
 
-> _Add your screenshots here once the app is running._
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/ed8d5060-d707-4528-970c-b511dc07385d" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/0ee7feef-4a66-46cc-8e09-25bb9268fbef" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/acc95e96-d249-49fb-9f17-c8d7b1d97094" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/8fd4f846-4a13-4ddc-97a3-81798323baa8" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/d5bc1bb6-466a-4096-82c3-3aeb4ba3df7b" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/9fc6f7f0-af92-4b74-ad52-ddcf40b85b26" />
+<img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/bf0ff3e7-e91a-4b07-8932-55cea0f01403" />
 
 ---
 
@@ -100,4 +106,4 @@ Built as the final project for the **Distributed Systems (3664)** course — a 3
 
 ## License
 
-MIT License — free to use, modify, and distribute.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
