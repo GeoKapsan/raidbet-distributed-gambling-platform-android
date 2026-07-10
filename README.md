@@ -1,4 +1,4 @@
-# RaidBet: A Distributed Gambling Platform (Frontend)
+# RaidBet: A Distributed Online Gambling Platform (Frontend)
 
 A sleek, modern mobile gambling app for Android, built as the frontend companion to a fully distributed backend system developed for the **Distributed Systems (3664)** course at the **Athens University of Economics and Business**.
 
