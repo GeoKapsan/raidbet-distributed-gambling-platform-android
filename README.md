@@ -4,7 +4,7 @@ A sleek, modern mobile gambling app for Android, built as the frontend companion
 
 The backend runs across multiple machines simultaneously, handles many players at once, and resolves every bet using cryptographically secure random numbers. All built from scratch in Java with no external libraries.
 
-> **Backend repo:** https://github.com/GeoKapsan/distributed-gambling-platform-android
+> **Backend repo:** [https://github.com/GeoKapsan/distributed-gambling-platform-android](https://github.com/GeoKapsan/raidbet-distributed-gambling-platform)
 
 ---
 
